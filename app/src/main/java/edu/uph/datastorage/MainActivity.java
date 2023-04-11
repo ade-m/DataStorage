@@ -14,6 +14,7 @@ import edu.uph.datastorage.model.User;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import io.realm.exceptions.RealmPrimaryKeyConstraintException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -74,6 +75,28 @@ public class MainActivity extends AppCompatActivity {
                 cetakDataUser();
             }
         });
+
+        Button btnInq = (Button) findViewById(R.id.btnInq);
+        btnInq.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =
+                        new Intent(MainActivity.this,
+                                UserInquiryActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        Button btnTambahUser = (Button) findViewById(R.id.btnTanmbahUser);
+        btnTambahUser.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent =
+                        new Intent(MainActivity.this,
+                                formUserActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     public void tambahDataUser(){
@@ -82,14 +105,29 @@ public class MainActivity extends AppCompatActivity {
         realm.executeTransaction(new Realm.Transaction() {
                  @Override
                  public void execute(Realm realm) {
-                     User user = realm.createObject(User.class);
-                     user.setNama("Budi");
-                     user.setNotlp("0822121212");
+                     try {
+                        realm.deleteAll();
+                         User user1 = realm.createObject(User.class,"08221245454");
+                         user1.setNama("Susi");
+                         User user2 = realm.createObject(User.class,"082212485454");
+                         user2.setNama("Susi");
+                         User user13 = realm.createObject(User.class,"082212415454");
+                         user13.setNama("Susi");
+                         User user01 = new User();
+                         user01.setNama("Budi");
+                         user01.setNotlp("0822121212" +" ");
+
+                         User user = realm.createObject(User.class,user01.getNotlp());
+                         user.setNama("Budi");
+//                      user.setNotlp("0822121212");
 
 
-                     User user1 = realm.createObject(User.class);
-                     user1.setNama("Susi");
-                     user1.setNotlp("08221245454");
+//                     user1.setNotlp("08221245454");
+                     }catch (RealmPrimaryKeyConstraintException e){
+                         Log.d("TAG","PrimaryKey Sudah ada + "
+                                 +e.getMessage().toString());
+                     }
+
                  }
              }
         );
